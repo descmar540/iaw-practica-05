@@ -5,8 +5,8 @@ set -x
 #################################################
 
 # Reemplazar IP-HTTP-SERVER-1 Y IP-HTTP-SERVER-2 por las IPs de las máquinas Front-End
-IP_HTTP_SERVER_1=54.227.60.126
-IP_HTTP_SERVER_2=54.164.174.24
+IP_HTTP_SERVER_1=172.31.25.189
+IP_HTTP_SERVER_2=172.31.80.254
 
 #################################################
 
