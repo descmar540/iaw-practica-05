@@ -4,9 +4,9 @@ set -x
 #Variables de configuración
 #################################################
 
-# Reemplazar IP-HTTP-SERVER-1 Y IP-HTTP-SERVER-2 por las IPs de las máquinas Front-End
-IP_HTTP_SERVER_1=172.31.25.189
-IP_HTTP_SERVER_2=172.31.80.254
+# Configurar la IP privada de los dos front-ends
+IP_FRONTEND_01=172.31.25.189
+IP_FRONTEND_02=172.31.80.254
 
 #################################################
 
@@ -17,7 +17,7 @@ apt upgrade -y
 #Instalamos el servidor web Apache
 apt install apache2 -y
 
-# Activamos los siguientes módulos
+# Activamos los siguientes módulos para activar el proxy inverso
 a2enmod proxy
 a2enmod proxy_http
 a2enmod proxy_ajp
@@ -32,17 +32,15 @@ a2enmod lbmethod_byrequests
 # Reiniciamos el servidor Apache (no sé si esto es necesario aquí o mejor hacerlo al final)
 systemctl restart apache2
 
-# Añadir las directivas "Proxy" y "Proxypass" en Virtualhost
+# Copiamos el archivo de configuración de Apache
+cp 000-default.conf /etc/apache2/sites-available/000-default.conf
 
-# Hay que reemplazar IP-HTTP-SERVER-1 y IP-HTTP-SERVER-2 por las direcciones IPs de las máquinas Front-End
-
-#sed -i "s/IP-HTTP-SERVER-1/$IP_HTTP_SERVER_1/" /etc/apache2/sites-available/000-default.conf
-#sed -i "s/IP-HTTP-SERVER-2/$IP_HTTP_SERVER_2/" /etc/apache2/sites-available/000-default.conf
-
-# ESTE PASO ESTÁ COMENTADO PORQUE NO SÉ CÓMO AÑADIR LAS DIRECTIVAS PROXY Y PROXYPASS MEDIANTE SCRIPT, ENTONCES HE PREFERIDO HACER TODO ESTO YA A MANO.
+# Hay que reemplazar el texto de las variables IP-HTTP-SERVER-1 y IP-HTTP-SERVER-2 por las direcciones IPs de las máquinas Front-End
+sed -i "s/IP-HTTP-SERVER-1/$IP_FRONTEND_01/" /etc/apache2/sites-available/000-default.conf
+sed -i "s/IP-HTTP-SERVER-2/$IP_FRONTEND_02/" /etc/apache2/sites-available/000-default.conf
 
 # Reiniciamos el servidor Apache
-#systemctl restart apache2
+systemctl restart apache2
 
 
 
