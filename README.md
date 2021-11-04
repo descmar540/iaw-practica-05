@@ -77,3 +77,30 @@ Finalmente, lo único que resta es reiniciar el servicio Apache para que se apli
 - *systemctl restart apache2*
 
 Tras esto, ya debería de funcionar sin ningún tipo de problema el balanceador.
+
+----
+## CONFIGURACIÓN HTTPS
+
+El último paso que resta de la práctica consiste en conseguir la certificación para poder acceder a la aplicación web mediante el protocolo HTTPS.
+
+Se realiza mediante Certbot, y este se obtiene desde el repositorio de aplicaciones snap, no el apt clásico. Así pues, lo primero que hay que hacer es instalar el repositorio y actualizarlo
+- *snap install core*
+- *snap refresh core*
+
+Una vez realizado, toca instalar Certbot, pero previo a ello, es preciso o recomendable eliminar posibles anteriores instalaciones que hubiera, para que no haya problema a la hora de emitir la certificación
+
+- *apt-get remove certbot*
+- *snap install --classic certbot*
+
+Ya con Certbot instalado en el sistema, se puede proceder a pedir el certificado HTTPS.
+
+* *certbot --apache -m $EMAIL_HTTPS --agree-tos --no-eff-email -d $DOMAIN*
+
+En este comando entran dos variables por definir, **EMAIL_HTTPS=demo@demo.es** (se pone en forma de enlace por el .es) y la variable **DOMAIN=dem-balanceador.ddns.net**.
+
+La primera variable es un valor default, pero la segunda se obtiene de asociar la IP elástica de la máquina donde se trabaja (si se trabaja de esa manera) al dominio que sea, en este caso, uno creado en la dirección www.noip.com
+
+Además de esas instrucciones, en el comando aparece **agree-tos**, que es para aceptar automáticamente los términos y condiciones y **--no-eff-email** para no compartir el email con la *Electronic Frontier Foundation*.
+
+---
+Con todo ya preparado, lo que restaría sería ejecutar el script mediante el comando sudo (en este caso **sudo ./install_balanceador.sh**) y se ejecutaría el proceso de instalación del balanceador de carga con todas las herramientas adicionales al completo.

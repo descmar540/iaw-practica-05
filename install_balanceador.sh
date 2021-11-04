@@ -8,6 +8,10 @@ set -x
 IP_FRONTEND_01=172.31.25.189
 IP_FRONTEND_02=172.31.80.254
 
+# Configuración de HTTPS
+EMAIL_HTTPS=demo@demo.es
+DOMAIN=dem-balanceador.ddns.net
+
 #################################################
 
 #Actualizamos el sistema
@@ -43,5 +47,20 @@ sed -i "s/IP-HTTP-SERVER-2/$IP_FRONTEND_02/" /etc/apache2/sites-available/000-de
 systemctl restart apache2
 
 
+#########################################
+# Configuración HTTPS
+#########################################
 
+# Realizamos la instalación de snapd
+snap install core
+snap refresh core
+
+# Eliminamos instalaciones previas de certbot con apt
+apt-get remove certbot
+
+# Instalamos certbot con snap 
+snap install --classic certbot
+
+# Solicitamos el certificado HTTPS
+certbot --apache -m $EMAIL_HTTPS --agree-tos --no-eff-email -d $DOMAIN
 
